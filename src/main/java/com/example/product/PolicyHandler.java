@@ -16,38 +16,27 @@ public class PolicyHandler {
 //        System.out.println(productChanged);
 //    }
 
-//    @StreamListener(Processor.INPUT)
-//    public void onEventByObject(@Payload ProductChanged productChanged){
-//        if("ProductChanged".equals(productChanged.getEventType())) {
-//            System.out.println("onEventByObjet getEnentType " + productChanged.getEventType());
-//            System.out.println("onEventByObjet getEnentType " + productChanged.getProductName());
-//        }
-//    }
-
     @Autowired
     ProductRepository productRepository;
 
     @StreamListener(Processor.INPUT)
     public void onEventByObject(@Payload OrderPlaced orderPlaced){
-        // orderPlaced 데이터를 json --> 객체로 파싱 --> 클래스를 복사해서 가져옴
+        // orderPlaced 데이터를 json -> 객체로 파싱 -> 해결
 
-        //if (주문이 생성됭었을때만)
-        if("OrderPlaced".equals(orderPlaced.getEventType())){
-
+        // if (주문이 생성되었을때만)
+        if( "OrderPlaced".equals(orderPlaced.getEventType())){
             // 상품저장
-            Product p = new Product();
-            p.setId(orderPlaced.getProductId());
-            p.setStock(orderPlaced.getQty());
+//            Product p = new Product();
+//            p.setStock(orderPlaced.getQty());
+//            productRepository.save(p);
+
+            // 상품 ID 값의 재고 변경
+            Optional<Product> productById = productRepository.findById(orderPlaced.getProductId());
+
+            Product p = productById.get();
+            p.setStock( p.getStock() - orderPlaced.getQty());
             productRepository.save(p);
-
-            //상품 ID 값의 재고 변경
-            //Optional<Product> productById = productRepository.findById(orderPlaced.getProductId());
-
-
-
         }
-
-        //상품저장
 
     }
 }

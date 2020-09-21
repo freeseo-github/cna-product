@@ -2,13 +2,13 @@ package com.example.product;
 
 public class ProductChanged {
 
-    String eventType; //넘겨줄 이벤트 타입
+    String eventType;
     Long productId;
     String productName;
     int productStock;
 
     public ProductChanged(){
-        this.eventType = this.getClass().getSimpleName();
+        eventType = ProductChanged.class.getSimpleName();
     }
 
     public String getEventType() {

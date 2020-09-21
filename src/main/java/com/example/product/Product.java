@@ -1,15 +1,15 @@
 package com.example.product;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
-
-import javax.persistence.*;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.util.MimeTypeUtils;
+
+import javax.persistence.*;
 
 @Entity
 public class Product {
@@ -19,16 +19,16 @@ public class Product {
     String name;
     int stock;
 
-    @PostPersist
+    @PostPersist @PostUpdate
     public void onPostPersist(){
         // 이벤트 발행
 
         ProductChanged productChanged = new ProductChanged();
-        productChanged.setProductId(this.getId());
         productChanged.setProductName(this.getName());
+        productChanged.setProductId(this.getId());
         productChanged.setProductStock(this.getStock());
 
-        //해당 클래스를 json으로 변환
+        // 해당 클레스를 json 으로 변환
         ObjectMapper objectMapper = new ObjectMapper();
         String json = null;
 
@@ -37,9 +37,10 @@ public class Product {
         } catch (JsonProcessingException e) {
             throw new RuntimeException("JSON format exception", e);
         }
-        //System.out.println(json);
+//        System.out.println(json);
 
         // 메세지 큐에 publish
+
         Processor processor = ProductApplication.applicationContext.getBean(Processor.class);
         MessageChannel outputChannel = processor.output();
 

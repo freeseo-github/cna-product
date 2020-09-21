@@ -1,15 +1,14 @@
 package com.example.product;
 
 public class OrderPlaced {
-
     String eventType;
     Long orderId;
     Long productId;
-    int qty;
     String productName;
+    int qty;
 
     public OrderPlaced(){
-        this.eventType = OrderPlaced.class.getSimpleName();
+        eventType = OrderPlaced.class.getSimpleName();
     }
 
     public String getEventType() {
@@ -36,14 +35,6 @@ public class OrderPlaced {
         this.productId = productId;
     }
 
-    public int getQty() {
-        return qty;
-    }
-
-    public void setQty(int qty) {
-        this.qty = qty;
-    }
-
     public String getProductName() {
         return productName;
     }
@@ -52,4 +43,11 @@ public class OrderPlaced {
         this.productName = productName;
     }
 
+    public int getQty() {
+        return qty;
+    }
+
+    public void setQty(int qty) {
+        this.qty = qty;
+    }
 }
